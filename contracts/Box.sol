@@ -24,3 +24,9 @@ contract Box is Initializable {
         return _value;
     }
 }
+
+contract BoxV2 is Box {
+    function getVersion() public pure returns(uint256) {
+        return 2;
+    }
+}
