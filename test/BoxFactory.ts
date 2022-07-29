@@ -21,23 +21,25 @@ describe("Lock", function () {
 
     const boxv2 = await ethers.getContractFactory("BoxV2");
 
-    return { boxFactory, box, boxv2, owner, otherAccount };
+    return { boxInstance, boxFactory, box, boxv2, owner, otherAccount };
   }
 
   describe("Deployment", function () {
     it("Can deploy new box", async function () {
-      const { boxFactory, box, boxv2 } = await loadFixture(
+      const { boxFactory, box, boxv2, boxInstance } = await loadFixture(
         deployBoxFactoryFixture
       );
 
       const value = 123456789;
 
-      var args = {
-        value: 1234,
-      };
-      var callData = box.interface.encodeFunctionData("initialise", [value]);
+      // var args = {
+      //   value: 1234,
+      // };
+      // var callData = box.interface.encodeFunctionData("initialise", [value]);
 
-      const tx = await boxFactory.createProxy(callData);
+      //const tx = await boxFactory.createProxy(callData);
+
+      const tx = await boxFactory.createProxyAbi(value);
       const res = await tx.wait();
 
       const event = res.events?.filter((x) => {

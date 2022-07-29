@@ -5,7 +5,9 @@ import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-//import "./Box.sol";
+import "./Box.sol";
+
+import "hardhat/console.sol";
 
 // https://forum.openzeppelin.com/t/deploying-upgradeable-proxies-and-proxy-admin-from-factory-contract/12132/13
 contract BeaconFactory is UpgradeableBeacon {    
@@ -13,19 +15,14 @@ contract BeaconFactory is UpgradeableBeacon {
 
     constructor(address implementation) UpgradeableBeacon(implementation) { }   
 
-    // this method the initialiser isn't upgradable...
-    //  function createProxy(uint256 value) external returns (BeaconProxy) {
-    //      BeaconProxy proxy = new BeaconProxy(
-    //          address(this),
-    //          abi.encodeWithSelector(Box.initialise.selector, value)
-    //      );
+    //this method the initialiser isn't upgradable...
+     function createProxyAbi(uint256 value) external returns (BeaconProxy) {                  
+         bytes memory data = abi.encodeWithSelector(Box.initialise.selector, value);
+         return createProxy(data);        
+     }
 
-    //      emit ProxyDeployed(proxy);
-    //      return proxy;
-    //  }
-     
     // this method the initialiser is upgradable but the API is going to be trash...
-    function createProxy(bytes calldata data) external returns (BeaconProxy) {        
+    function createProxy(bytes memory data) public returns (BeaconProxy) {        
         BeaconProxy proxy = new BeaconProxy(
             address(this),
             data
